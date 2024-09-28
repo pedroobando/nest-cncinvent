@@ -35,6 +35,15 @@ type Proyect {
   lastUpdateBy: User
 }
 
+type ProductType {
+  id: ID!
+  name: String!
+  isActive: Boolean!
+  createdAt: Float!
+  updatedAt: Float!
+  lastUpdateBy: User
+}
+
 type Query {
   userFindall(roles: [ValidRoles!] = [], offset: Int = 0, limit: Int = 10, search: String): [User!]!
   userFindOne(id: ID!): User!
@@ -43,6 +52,8 @@ type Query {
   departamentFindOne(id: ID!): Departament!
   proyectfindAll(offset: Int = 0, limit: Int = 10, search: String): [Proyect!]!
   proyectfindOne(id: ID!): Proyect!
+  productTypefindAll(offset: Int = 0, limit: Int = 10, search: String): [ProductType!]!
+  productTypefindOne(id: ID!): ProductType!
 }
 
 """Roles de usuarios validos"""
@@ -64,6 +75,9 @@ type Mutation {
   proyectCreate(createProyectInput: CreateProyectInput!): Proyect!
   proyectUpdate(updateProyectInput: UpdateProyectInput!): Proyect!
   proyectRemove(id: ID!): Proyect!
+  productTypeCreate(createProductTypeInput: CreateProductTypeInput!): ProductType!
+  productTypeUpdate(updateProductTypeInput: UpdateProductTypeInput!): ProductType!
+  productTypeRemove(id: ID!): ProductType!
 }
 
 input UpdateUserInput {
@@ -99,7 +113,7 @@ input CreateDepartamentInput {
 input UpdateDepartamentInput {
   name: String
   id: ID!
-  isActive: Boolean!
+  isActive: Boolean
 }
 
 input CreateProyectInput {
@@ -111,5 +125,15 @@ input UpdateProyectInput {
   code: Int
   name: String
   id: ID!
-  isActive: Boolean!
+  isActive: Boolean
+}
+
+input CreateProductTypeInput {
+  name: String!
+}
+
+input UpdateProductTypeInput {
+  name: String
+  id: ID!
+  isActive: Boolean
 }

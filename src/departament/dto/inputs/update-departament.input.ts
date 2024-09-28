@@ -3,14 +3,12 @@ import { InputType, Field, Int, PartialType, ID } from '@nestjs/graphql';
 import { IsBoolean, IsUUID } from 'class-validator';
 
 @InputType()
-export class UpdateDepartamentInput extends PartialType(
-  CreateDepartamentInput,
-) {
+export class UpdateDepartamentInput extends PartialType(CreateDepartamentInput) {
   @Field(() => ID)
   @IsUUID()
   id: string;
 
-  @Field(() => Boolean)
+  @Field(() => Boolean, { nullable: true })
   @IsBoolean()
   isActive: boolean;
 }

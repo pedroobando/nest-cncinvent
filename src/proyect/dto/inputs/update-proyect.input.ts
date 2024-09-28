@@ -8,7 +8,7 @@ export class UpdateProyectInput extends PartialType(CreateProyectInput) {
   @IsUUID()
   id: string;
 
-  @Field(() => Boolean)
+  @Field(() => Boolean, { nullable: true })
   @IsBoolean()
   isActive: boolean;
 }
