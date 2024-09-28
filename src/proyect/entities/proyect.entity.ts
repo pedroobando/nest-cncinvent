@@ -1,19 +1,18 @@
-import { ObjectType, Field, ID } from '@nestjs/graphql';
+import { ObjectType, Field, ID, Int } from '@nestjs/graphql';
 import { User } from 'src/user/entities';
-import {
-  Column,
-  Entity,
-  Index,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, Index, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity({ name: 'departaments' })
+@Entity({ name: 'proyects' })
 @ObjectType()
-export class Departament {
+export class Proyect {
   @PrimaryGeneratedColumn('uuid')
   @Field(() => ID)
   id: string;
+
+  @Column()
+  @Index({ unique: true })
+  @Field(() => Int)
+  code: number;
 
   @Column()
   @Index({ unique: true })
@@ -34,20 +33,6 @@ export class Departament {
 
   //* Usuario que crea el registro
   @ManyToOne(() => User, (user) => user.id, { nullable: true, lazy: true })
-  // @JoinColumn({ name: 'lastUpdateBy' })
   @Field(() => User, { nullable: true })
   lastUpdateBy?: User;
-  // @Column()
-  // userId: string;
-
-  // stores
-  // user
-  // @ManyToOne(() => User, (user) => user.items, { nullable: false, lazy: true })
-  // @Index('userId-index')
-  // @Field(() => User)
-  // user: User;
-
-  // @OneToMany(() => ListItem, (listItem) => listItem.item, { lazy: true })
-  // @Field(() => [ListItem])
-  // listItem: ListItem[];
 }

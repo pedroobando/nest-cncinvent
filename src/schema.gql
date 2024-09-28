@@ -25,12 +25,24 @@ type Departament {
   lastUpdateBy: User
 }
 
+type Proyect {
+  id: ID!
+  code: Int!
+  name: String!
+  isActive: Boolean!
+  createdAt: Float!
+  updatedAt: Float!
+  lastUpdateBy: User
+}
+
 type Query {
   userFindall(roles: [ValidRoles!] = [], offset: Int = 0, limit: Int = 10, search: String): [User!]!
   userFindOne(id: ID!): User!
   authrevalidate: AuthResponse!
   departamentFindAll(offset: Int = 0, limit: Int = 10, search: String): [Departament!]!
   departamentFindOne(id: ID!): Departament!
+  proyectfindAll(offset: Int = 0, limit: Int = 10, search: String): [Proyect!]!
+  proyectfindOne(id: ID!): Proyect!
 }
 
 """Roles de usuarios validos"""
@@ -49,6 +61,9 @@ type Mutation {
   departamentCreate(createDepartamentInput: CreateDepartamentInput!): Departament!
   departamentUpdate(updateDepartamentInput: UpdateDepartamentInput!): Departament!
   departamentRemove(id: ID!): Departament!
+  proyectCreate(createProyectInput: CreateProyectInput!): Proyect!
+  proyectUpdate(updateProyectInput: UpdateProyectInput!): Proyect!
+  proyectRemove(id: ID!): Proyect!
 }
 
 input UpdateUserInput {
@@ -82,6 +97,18 @@ input CreateDepartamentInput {
 }
 
 input UpdateDepartamentInput {
+  name: String
+  id: ID!
+  isActive: Boolean!
+}
+
+input CreateProyectInput {
+  code: Int!
+  name: String!
+}
+
+input UpdateProyectInput {
+  code: Int
   name: String
   id: ID!
   isActive: Boolean!

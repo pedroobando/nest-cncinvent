@@ -26,19 +26,12 @@ export class DepartamentResolver {
   }
 
   @Query(() => [Departament], { name: 'departamentFindAll' })
-  findAll(
-    @Args() paginationArgs: PaginationArgs,
-    @Args() searchArgs: SearchArgs,
-    @CurrentUser() user: User,
-  ) {
+  findAll(@Args() paginationArgs: PaginationArgs, @Args() searchArgs: SearchArgs, @CurrentUser() user: User) {
     return this.departamentService.findAll(paginationArgs, searchArgs);
   }
 
   @Query(() => Departament, { name: 'departamentFindOne' })
-  findOne(
-    @Args('id', { type: () => ID }, ParseUUIDPipe) id: string,
-    @CurrentUser() user: User,
-  ) {
+  findOne(@Args('id', { type: () => ID }, ParseUUIDPipe) id: string, @CurrentUser() user: User) {
     return this.departamentService.findOne(id);
   }
 
@@ -48,11 +41,7 @@ export class DepartamentResolver {
     updateDepartamentInput: UpdateDepartamentInput,
     @CurrentUser([ValidRoles.admin, ValidRoles.superUser]) user: User,
   ) {
-    return this.departamentService.update(
-      updateDepartamentInput.id,
-      updateDepartamentInput,
-      user,
-    );
+    return this.departamentService.update(updateDepartamentInput.id, updateDepartamentInput, user);
   }
 
   @Mutation(() => Departament, { name: 'departamentRemove' })

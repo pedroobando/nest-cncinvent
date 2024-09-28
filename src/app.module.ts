@@ -1,5 +1,5 @@
 import { join } from 'path';
-import { DynamicModule, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -11,21 +11,7 @@ import { CommonModule } from './common/common.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user';
 import { DepartamentModule } from './departament/departament.module';
-
-const RetTypeORM = (): DynamicModule => {
-  return TypeOrmModule.forRoot({
-    type: 'postgres',
-    host: process.env.DB_HOST,
-    port: parseInt(process.env.DB_PORT),
-    username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    autoLoadEntities: true,
-    synchronize: process.env.STATE === 'prod' ? false : true,
-    // entities: [],
-    // synchronize: true,
-  });
-};
+import { ProyectModule } from './proyect/proyect.module';
 
 @Module({
   imports: [
@@ -39,7 +25,18 @@ const RetTypeORM = (): DynamicModule => {
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
     }),
 
-    RetTypeORM(),
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: process.env.DB_HOST,
+      port: parseInt(process.env.DB_PORT),
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
+      autoLoadEntities: true,
+      synchronize: process.env.STATE === 'prod' ? false : true,
+      // entities: [],
+      // synchronize: true,
+    }),
 
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
@@ -49,6 +46,7 @@ const RetTypeORM = (): DynamicModule => {
     UserModule,
     AuthModule,
     DepartamentModule,
+    ProyectModule,
   ],
   controllers: [],
   providers: [],

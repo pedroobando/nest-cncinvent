@@ -21,10 +21,7 @@ export class DepartamentService {
     private readonly departamentRepository: Repository<Departament>,
   ) {}
 
-  async create(
-    createDepartamentInput: CreateDepartamentInput,
-    user: User,
-  ): Promise<Departament> {
+  async create(createDepartamentInput: CreateDepartamentInput, user: User): Promise<Departament> {
     try {
       const newDepto = this.departamentRepository.create({
         ...createDepartamentInput,
@@ -35,17 +32,13 @@ export class DepartamentService {
       });
       // return await this.departamentRepository.save(newDepto);
       await this.departamentRepository.save(newDepto);
-      console.log(newDepto);
       return await this.findOne(newDepto.id);
     } catch (error) {
       this.handleDBExeptions(error);
     }
   }
 
-  async findAll(
-    paginationArgs: PaginationArgs,
-    searchArgs: SearchArgs,
-  ): Promise<Departament[]> {
+  async findAll(paginationArgs: PaginationArgs, searchArgs: SearchArgs): Promise<Departament[]> {
     const { limit, offset } = paginationArgs;
     const { search } = searchArgs;
 
@@ -88,19 +81,14 @@ export class DepartamentService {
     return theItem;
   }
 
-  async update(
-    id: string,
-    updateDepartamentInput: UpdateDepartamentInput,
-    user: User,
-  ): Promise<Departament> {
+  async update(id: string, updateDepartamentInput: UpdateDepartamentInput, user: User): Promise<Departament> {
     await this.findOne(id);
     const departament = await this.departamentRepository.preload({
       ...updateDepartamentInput,
       updatedAt: new Date().getTime(),
       lastUpdateBy: { id: user.id },
     });
-    if (!departament)
-      throw new NotFoundException(`Departament with id: ${id} not found`);
+    if (!departament) throw new NotFoundException(`Departament with id: ${id} not found`);
     return this.departamentRepository.save(departament);
   }
 
@@ -122,8 +110,6 @@ export class DepartamentService {
     }
 
     this.logger.error(error);
-    throw new InternalServerErrorException(
-      'Unexpected error, check server logs',
-    );
+    throw new InternalServerErrorException('Unexpected error, check server logs');
   }
 }
