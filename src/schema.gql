@@ -1,0 +1,88 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type User {
+  id: ID!
+  fullName: String!
+  email: String!
+  roles: [String!]!
+  isActive: Boolean!
+  lastUpdateBy: User
+}
+
+type AuthResponse {
+  token: String!
+  user: User!
+}
+
+type Departament {
+  id: ID!
+  name: String!
+  isActive: Boolean!
+  createdAt: Float!
+  updatedAt: Float!
+  lastUpdateBy: User
+}
+
+type Query {
+  userFindall(roles: [ValidRoles!] = [], offset: Int = 0, limit: Int = 10, search: String): [User!]!
+  userFindOne(id: ID!): User!
+  authrevalidate: AuthResponse!
+  departamentFindAll(offset: Int = 0, limit: Int = 10, search: String): [Departament!]!
+  departamentFindOne(id: ID!): Departament!
+}
+
+"""Roles de usuarios validos"""
+enum ValidRoles {
+  admin
+  user
+  superUser
+}
+
+type Mutation {
+  userUpdate(updateUserInput: UpdateUserInput!): User!
+  userBlock(id: ID!): User!
+  userResetPass(resetpassInput: ResetPassInput!): User!
+  authsignup(signupInput: SignupInput!): AuthResponse!
+  authlogin(loginInput: LoginInput!): AuthResponse!
+  departamentCreate(createDepartamentInput: CreateDepartamentInput!): Departament!
+  departamentUpdate(updateDepartamentInput: UpdateDepartamentInput!): Departament!
+  departamentRemove(id: ID!): Departament!
+}
+
+input UpdateUserInput {
+  email: String
+  fullName: String
+  color: String
+  password: String
+  id: ID!
+  roles: [ValidRoles!]
+  isActive: Boolean
+}
+
+input ResetPassInput {
+  id: ID!
+  password: String!
+}
+
+input SignupInput {
+  email: String!
+  fullName: String!
+  password: String!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+input CreateDepartamentInput {
+  name: String!
+}
+
+input UpdateDepartamentInput {
+  name: String
+  id: ID!
+  isActive: Boolean!
+}

@@ -1,0 +1,56 @@
+import { join } from 'path';
+import { DynamicModule, Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
+
+import { CommonModule } from './common/common.module';
+import { AuthModule } from './auth/auth.module';
+import { UserModule } from './user';
+import { DepartamentModule } from './departament/departament.module';
+
+const RetTypeORM = (): DynamicModule => {
+  return TypeOrmModule.forRoot({
+    type: 'postgres',
+    host: process.env.DB_HOST,
+    port: parseInt(process.env.DB_PORT),
+    username: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    autoLoadEntities: true,
+    synchronize: process.env.STATE === 'prod' ? false : true,
+    // entities: [],
+    // synchronize: true,
+  });
+};
+
+@Module({
+  imports: [
+    ConfigModule.forRoot(),
+
+    //* Configuracion basica
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      playground: false,
+      plugins: [ApolloServerPluginLandingPageLocalDefault()],
+      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+    }),
+
+    RetTypeORM(),
+
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),
+    }),
+
+    CommonModule,
+    UserModule,
+    AuthModule,
+    DepartamentModule,
+  ],
+  controllers: [],
+  providers: [],
+})
+export class AppModule {}
