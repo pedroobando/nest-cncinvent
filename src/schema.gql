@@ -44,6 +44,21 @@ type ProductType {
   lastUpdateBy: User
 }
 
+type Product {
+  id: ID!
+  productType: ProductType
+  name: String!
+  serial: String!
+  color: String!
+  mark: String!
+  model: String!
+  isActive: Boolean!
+  containedIn: Product
+  createdAt: Float!
+  updatedAt: Float!
+  lastUpdateBy: User
+}
+
 type Query {
   userFindall(roles: [ValidRoles!] = [], offset: Int = 0, limit: Int = 10, search: String): [User!]!
   userFindOne(id: ID!): User!
@@ -54,6 +69,8 @@ type Query {
   proyectfindOne(id: ID!): Proyect!
   productTypefindAll(offset: Int = 0, limit: Int = 10, search: String): [ProductType!]!
   productTypefindOne(id: ID!): ProductType!
+  productfindAll(offset: Int = 0, limit: Int = 10, search: String): [Product!]!
+  productfindOne(id: ID!): Product!
 }
 
 """Roles de usuarios validos"""
@@ -78,6 +95,9 @@ type Mutation {
   productTypeCreate(createProductTypeInput: CreateProductTypeInput!): ProductType!
   productTypeUpdate(updateProductTypeInput: UpdateProductTypeInput!): ProductType!
   productTypeRemove(id: ID!): ProductType!
+  productCreate(createProductInput: CreateProductInput!): Product!
+  productUpdate(updateProductInput: UpdateProductInput!): Product!
+  productRemove(id: ID!): Product!
 }
 
 input UpdateUserInput {
@@ -134,6 +154,28 @@ input CreateProductTypeInput {
 
 input UpdateProductTypeInput {
   name: String
+  id: ID!
+  isActive: Boolean
+}
+
+input CreateProductInput {
+  productType: ID!
+  name: String!
+  serial: String
+  color: String
+  mark: String
+  model: String
+  containedIn: ID
+}
+
+input UpdateProductInput {
+  productType: ID
+  name: String
+  serial: String
+  color: String
+  mark: String
+  model: String
+  containedIn: ID
   id: ID!
   isActive: Boolean
 }

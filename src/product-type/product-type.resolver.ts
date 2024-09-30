@@ -1,9 +1,11 @@
 import { Resolver, Query, Mutation, Args, Int, ID } from '@nestjs/graphql';
-import { ProductTypeService } from './product-type.service';
-import { ProductType } from './entities/product-type.entity';
-import { CreateProductTypeInput } from './dto/inputs/create-product-type.input';
-import { UpdateProductTypeInput } from './dto/inputs/update-product-type.input';
 import { ParseUUIDPipe, UseGuards } from '@nestjs/common';
+
+import { ProductTypeService } from './product-type.service';
+import { ProductType } from './entities';
+
+import { CreateProductTypeInput, UpdateProductTypeInput } from './dto/inputs';
+
 import { JwtAuthGuard } from 'src/auth/guards';
 import { CurrentUser } from 'src/auth/decorators';
 import { ValidRoles } from 'src/auth/enums';

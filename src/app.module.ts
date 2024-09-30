@@ -13,6 +13,7 @@ import { UserModule } from './user';
 import { DepartamentModule } from './departament/departament.module';
 import { ProyectModule } from './proyect/proyect.module';
 import { ProductTypeModule } from './product-type/product-type.module';
+import { ProductModule } from './product/product.module';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { ProductTypeModule } from './product-type/product-type.module';
     DepartamentModule,
     ProyectModule,
     ProductTypeModule,
+    ProductModule,
   ],
   controllers: [],
   providers: [],

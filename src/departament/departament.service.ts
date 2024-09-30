@@ -25,6 +25,7 @@ export class DepartamentService {
     try {
       const newDepto = this.departamentRepository.create({
         ...createDepartamentInput,
+        name: createDepartamentInput.name.trim(),
         createdAt: new Date().getTime(),
         updatedAt: new Date().getTime(),
         isActive: true,
@@ -85,6 +86,7 @@ export class DepartamentService {
     await this.findOne(id);
     const departament = await this.departamentRepository.preload({
       ...updateDepartamentInput,
+      name: updateDepartamentInput.name.trim(),
       updatedAt: new Date().getTime(),
       lastUpdateBy: { id: user.id },
     });
