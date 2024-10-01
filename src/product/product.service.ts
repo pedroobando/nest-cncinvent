@@ -13,6 +13,7 @@ import { ProductType } from 'src/product-type/entities';
 import { CreateProductInput, UpdateProductInput } from './dto/inputs';
 import { User } from 'src/user/entities';
 import { PaginationArgs, SearchArgs } from 'src/common/dto';
+import { ProductContained } from 'src/product-contained/entities';
 
 @Injectable()
 export class ProductService {
@@ -24,6 +25,9 @@ export class ProductService {
 
     @InjectRepository(ProductType)
     private readonly productTypeRepository: Repository<ProductType>,
+
+    @InjectRepository(ProductContained)
+    private readonly productContainedRepository: Repository<ProductContained>,
   ) {}
 
   async create(createProductInput: CreateProductInput, user: User): Promise<Product> {
@@ -113,9 +117,23 @@ export class ProductService {
 
     return pTypeFind;
   }
-  // async productInCount(product: Product): Promise<number> {
-  //   return await this.productRepository.count({ where: { containedIn: product.id } });
-  // }
+
+  async containedInCount(product: Product): Promise<number> {
+    return await this.productContainedRepository.count({ where: { product: { id: product.id } } });
+  }
+
+  async containedIn(product: Product): Promise<Product[]> {
+    const { id } = product;
+    const findPromise = [];
+    const resultfind = await this.productContainedRepository.findBy({ product: { id } });
+    console.log(resultfind);
+    // resultfind.map(async (item) => {
+    //   findPromise.push(await this.findOne(item.contained.id));
+    // });
+    // const pepe = Promise.all(findPromise);
+    // console.log(pepe);
+    return [];
+  }
 
   // async fatherProduct(product: Product): Promise<Product> {
   //   return await this.productRepository.findOneBy({ id: product.containedIn });

@@ -1,8 +1,10 @@
+import { IsUUID } from 'class-validator';
 import { CreateProductContainedInput } from './create-product-contained.input';
-import { InputType, Field, Int, PartialType } from '@nestjs/graphql';
+import { InputType, Field, PartialType, ID } from '@nestjs/graphql';
 
 @InputType()
 export class UpdateProductContainedInput extends PartialType(CreateProductContainedInput) {
-  @Field(() => Int)
-  id: number;
+  @Field(() => ID)
+  @IsUUID()
+  id: string;
 }

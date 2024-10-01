@@ -35,6 +35,15 @@ type Proyect {
   lastUpdateBy: User
 }
 
+type ProductContained {
+  id: ID!
+  product: Product!
+  contained: Product!
+  createdAt: Float!
+  updatedAt: Float!
+  lastUpdateBy: User
+}
+
 type Product {
   id: ID!
   productTypeOne: ProductType!
@@ -47,6 +56,8 @@ type Product {
   createdAt: Float!
   updatedAt: Float!
   lastUpdateBy: User
+  containedInCount: Int!
+  containedIn(offset: Int = 0, limit: Int = 10): [ProductContained!]!
 }
 
 type ProductType {
@@ -56,15 +67,6 @@ type ProductType {
   createdAt: Float!
   updatedAt: Float!
   products: [Product!]!
-  lastUpdateBy: User
-}
-
-type ProductContained {
-  id: ID!
-  product: Product!
-  contained: Product!
-  createdAt: Float!
-  updatedAt: Float!
   lastUpdateBy: User
 }
 
@@ -80,7 +82,8 @@ type Query {
   productTypefindOne(id: ID!): ProductType!
   productfindAll(offset: Int = 0, limit: Int = 10, search: String): [Product!]!
   productfindOne(id: ID!): Product!
-  productContained(id: Int!): ProductContained!
+  productContainedByProduct(productId: ID!, offset: Int = 0, limit: Int = 10): [ProductContained!]!
+  productContainedfindOne(id: ID!): ProductContained!
 }
 
 """Roles de usuarios validos"""
@@ -108,9 +111,9 @@ type Mutation {
   productCreate(createProductInput: CreateProductInput!): Product!
   productUpdate(updateProductInput: UpdateProductInput!): Product!
   productRemove(id: ID!): Product!
-  createProductContained(createProductContainedInput: CreateProductContainedInput!): ProductContained!
-  updateProductContained(updateProductContainedInput: UpdateProductContainedInput!): ProductContained!
-  removeProductContained(id: Int!): ProductContained!
+  productContainedCreate(createProductContainedInput: CreateProductContainedInput!): ProductContained!
+  productContainedUpdate(updateProductContainedInput: UpdateProductContainedInput!): ProductContained!
+  productContainedRemove(id: ID!): ProductContained!
 }
 
 input UpdateUserInput {
@@ -192,12 +195,12 @@ input UpdateProductInput {
 }
 
 input CreateProductContainedInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  productId: ID!
+  containedId: ID!
 }
 
 input UpdateProductContainedInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  productId: ID
+  containedId: ID
+  id: ID!
 }

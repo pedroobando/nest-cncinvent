@@ -5,10 +5,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductContainedService } from './product-contained.service';
 import { ProductContainedResolver } from './product-contained.resolver';
 import { ProductContained } from './entities';
-import { ProductModule } from 'src/product';
 
 @Module({
-  imports: [ConfigModule, TypeOrmModule.forFeature([ProductContained]), ProductModule],
+  imports: [ConfigModule, TypeOrmModule.forFeature([ProductContained])],
   providers: [ProductContainedResolver, ProductContainedService],
+  exports: [TypeOrmModule, ProductContainedService],
 })
 export class ProductContainedModule {}

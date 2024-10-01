@@ -43,9 +43,9 @@ export class Product {
   isActive: boolean;
 
   // //* Usuario que crea el registro
-  // @OneToMany(() => ProductContained, (contained) => contained.product, { nullable: true, lazy: true })
+  @OneToMany(() => ProductContained, (contained) => contained.product, { nullable: true, lazy: true })
   // @Field(() => ProductContained, { nullable: true })
-  // contained: ProductContained;
+  contained: ProductContained[];
 
   @Column({ type: 'numeric' })
   @Field(() => Number)

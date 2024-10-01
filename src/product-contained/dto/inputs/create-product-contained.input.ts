@@ -1,7 +1,13 @@
-import { InputType, Int, Field } from '@nestjs/graphql';
+import { InputType, Field, ID } from '@nestjs/graphql';
+import { IsUUID } from 'class-validator';
 
 @InputType()
 export class CreateProductContainedInput {
-  @Field(() => Int, { description: 'Example field (placeholder)' })
-  exampleField: number;
+  @Field(() => ID)
+  @IsUUID()
+  productId: string;
+
+  @Field(() => ID)
+  @IsUUID()
+  containedId: string;
 }

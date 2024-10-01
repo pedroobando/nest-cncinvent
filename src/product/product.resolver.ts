@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int, ID, ResolveField, Parent } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, ID, ResolveField, Int, Parent } from '@nestjs/graphql';
 import { ParseUUIDPipe, UseGuards } from '@nestjs/common';
 
 import { ProductService } from './product.service';
@@ -10,11 +10,16 @@ import { CurrentUser } from 'src/auth/decorators';
 import { ValidRoles } from 'src/auth/enums';
 import { User } from 'src/user/entities';
 import { PaginationArgs, SearchArgs } from 'src/common/dto';
+import { ProductContainedService } from 'src/product-contained/product-contained.service';
+import { ProductContained } from 'src/product-contained/entities';
 
 @Resolver(() => Product)
 @UseGuards(JwtAuthGuard)
 export class ProductResolver {
-  constructor(private readonly productService: ProductService) {}
+  constructor(
+    private readonly productService: ProductService,
+    private readonly productContainedService: ProductContainedService,
+  ) {}
 
   @Mutation(() => Product, { name: 'productCreate' })
   createProduct(
@@ -50,9 +55,26 @@ export class ProductResolver {
     return this.productService.remove(id);
   }
 
-  // @ResolveField(() => Int, { name: 'productInCount' })
-  // async productInCount(@Parent() product: Product, @CurrentUser() activeUser: User): Promise<number> {
-  //   return this.productService.productInCount(product);
+  @ResolveField(() => Int, { name: 'containedInCount' })
+  containedInCount(@Parent() product: Product): Promise<number> {
+    return this.productService.containedInCount(product);
+  }
+
+  @ResolveField(() => [ProductContained], { name: 'containedIn' })
+  getContainedIn(
+    @Parent() product: Product,
+    @Args() paginationArgs: PaginationArgs,
+  ): Promise<ProductContained[]> {
+    return this.productContainedService.findAllByProduct(product.id, paginationArgs);
+  }
+
+  // @ResolveField(() => [ListItem], { name: 'items' })
+  // async getListItems(
+  //   @Parent() list: List,
+  //   @Args() paginationArgs: PaginationArgs,
+  //   @Args() searchArgs: SearchArgs,
+  // ): Promise<ListItem[]> {
+  //   return this.listItemService.findAll(list, paginationArgs, searchArgs);
   // }
 
   // @ResolveField(() => Product, { name: 'fatherProduct', nullable: true })
