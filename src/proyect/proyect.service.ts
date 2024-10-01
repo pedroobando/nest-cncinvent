@@ -72,7 +72,7 @@ export class ProyectService {
       lastUpdateBy: user,
     });
     if (!proyect) throw new NotFoundException(`El Proyecto con el Id: ${id} no fue encontrado`);
-    return this.proyectRepository.save(proyect);
+    return await this.proyectRepository.save(proyect);
   }
 
   async remove(id: string): Promise<Proyect> {

@@ -91,7 +91,7 @@ export class DepartamentService {
       lastUpdateBy: { id: user.id },
     });
     if (!departament) throw new NotFoundException(`Departament with id: ${id} not found`);
-    return this.departamentRepository.save(departament);
+    return await this.departamentRepository.save(departament);
   }
 
   async remove(id: string): Promise<Departament> {

@@ -72,7 +72,7 @@ export class ProductTypeService {
       updatedAt: new Date().getTime(),
       lastUpdateBy: user,
     });
-    return this.poductTypeRepository.save(prodType);
+    return await this.poductTypeRepository.save(prodType);
   }
 
   async remove(id: string): Promise<ProductType> {
