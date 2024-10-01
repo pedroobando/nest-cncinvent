@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int, ID } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Int, ID, ResolveField, Parent } from '@nestjs/graphql';
 import { ParseUUIDPipe, UseGuards } from '@nestjs/common';
 
 import { ProductService } from './product.service';
@@ -49,4 +49,29 @@ export class ProductResolver {
   ) {
     return this.productService.remove(id);
   }
+
+  // @ResolveField(() => Int, { name: 'productInCount' })
+  // async productInCount(@Parent() product: Product, @CurrentUser() activeUser: User): Promise<number> {
+  //   return this.productService.productInCount(product);
+  // }
+
+  // @ResolveField(() => Product, { name: 'fatherProduct', nullable: true })
+  // async fatherProduct(@Parent() product: Product, @CurrentUser() activeUser: User): Promise<Product | null> {
+  //   if (!product.containedIn) return null;
+  //   return this.productService.fatherProduct(product);
+  // }
+
+  // @ResolveField(() => Product, { name: 'childrenProducts', nullable: true })
+  // async chidrenProducts(
+  //   @Parent() product: Product,
+  //   @CurrentUser() activeUser: User,
+  // ): Promise<Product[] | null> {
+  //   // if (!product.containedIn) return null;
+  //   let pepe = null;
+  //   pepe = await this.productService.childrenProducts(product);
+  //   console.log(typeof pepe);
+  //   if (pepe !== null) return pepe;
+  //   // console.log(pepe);
+  //   return null;
+  // }
 }

@@ -27,21 +27,19 @@ export class ProductService {
   ) {}
 
   async create(createProductInput: CreateProductInput, user: User): Promise<Product> {
-    const { productType } = createProductInput;
-    const pTypeFind = await this.productTypeRepository.findOneBy({ id: productType.id });
-    if (!pTypeFind)
-      throw new NotFoundException(`El tipo de producto con el id: ${productType.id} no fue encontrado`);
-
+    const { productTypeOne, ...productRest } = createProductInput;
+    const productType = await this.findProductType(productTypeOne);
     try {
       const newProduct = this.productRepository.create({
-        ...createProductInput,
+        ...productRest,
+        productTypeOne: { id: productType.id },
+
         name: createProductInput.name.trim(),
         serial: createProductInput.serial.trim(),
-        // productType:productType.id,
         createdAt: new Date().getTime(),
         updatedAt: new Date().getTime(),
         isActive: true,
-        lastUpdateBy: { id: user.id },
+        lastUpdateBy: user,
       });
       // return await this.departamentRepository.save(newDepto);
       await this.productRepository.save(newProduct);
@@ -76,18 +74,23 @@ export class ProductService {
     return theItem;
   }
 
-  async update(id: string, updateProductInput: UpdateProductInput, user: User): Promise<Product> {
-    await this.findOne(id);
+  async update(id: string, updateProductInput: UpdateProductInput, updateBy: User): Promise<Product> {
+    const { productTypeOne, ...restUpdate } = updateProductInput;
+    const productType = await this.findProductType(productTypeOne);
     try {
       const productUpd = await this.productRepository.preload({
-        ...updateProductInput,
-        name: updateProductInput.name.trim(),
-        serial: updateProductInput.serial.trim(),
-        updatedAt: new Date().getTime(),
-        lastUpdateBy: user,
+        ...restUpdate,
       });
-      if (!productUpd) throw new NotFoundException(`Departament with id: ${id} not found`);
-      return this.productRepository.save(productUpd);
+
+      if (!productUpd) throw new NotFoundException(`Producto with id: ${id} not found`);
+
+      productUpd.name = productUpd.name.trim();
+      productUpd.serial = productUpd.serial.trim();
+      productUpd.updatedAt = new Date().getTime();
+      productUpd.lastUpdateBy = updateBy;
+      productUpd.productTypeOne = productType;
+
+      return await this.productRepository.save(productUpd);
     } catch (error) {
       this.handleDBExeptions(error);
     }
@@ -98,6 +101,32 @@ export class ProductService {
     const product = await this.findOne(id);
     return await this.productRepository.remove(product);
   }
+
+  private async findProductType(id: string): Promise<ProductType> {
+    const pTypeFind = await this.productTypeRepository.findOneBy({ id });
+    if (!pTypeFind) throw new NotFoundException(`El tipo de producto con el id: ${id} no fue encontrado`);
+
+    if (!pTypeFind.isActive)
+      throw new BadRequestException(
+        `El tipo de producto, ${pTypeFind.name} no esta activo para ser asignado.`,
+      );
+
+    return pTypeFind;
+  }
+  // async productInCount(product: Product): Promise<number> {
+  //   return await this.productRepository.count({ where: { containedIn: product.id } });
+  // }
+
+  // async fatherProduct(product: Product): Promise<Product> {
+  //   return await this.productRepository.findOneBy({ id: product.containedIn });
+  // }
+
+  // async childrenProducts(product: Product): Promise<Product[]> {
+  //   const todos = await this.productRepository.findBy({ containedIn: product.id });
+  //   // const pasando = todos.map((item) => (item.id ? item : null));
+  //   // console.log(pasando);
+  //   return todos.length >= 1 ? todos : null;
+  // }
 
   private handleDBExeptions(error: any): never {
     if (error.code === '23505') {

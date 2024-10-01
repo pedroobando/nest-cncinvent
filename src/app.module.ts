@@ -14,6 +14,7 @@ import { DepartamentModule } from './departament/departament.module';
 import { ProyectModule } from './proyect/proyect.module';
 import { ProductTypeModule } from './product-type/product-type.module';
 import { ProductModule } from './product/product.module';
+import { ProductContainedModule } from './product-contained/product-contained.module';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { ProductModule } from './product/product.module';
     ProyectModule,
     ProductTypeModule,
     ProductModule,
+    ProductContainedModule,
   ],
   controllers: [],
   providers: [],

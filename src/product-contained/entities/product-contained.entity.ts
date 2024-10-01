@@ -1,23 +1,23 @@
 import { ObjectType, Field, Int, ID } from '@nestjs/graphql';
 import { Product } from 'src/product/entities';
 import { User } from 'src/user/entities';
-import { Column, Entity, Index, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity({ name: 'producttypes' })
+@Entity({ name: 'productContaineds' })
 @ObjectType()
-export class ProductType {
+export class ProductContained {
   @PrimaryGeneratedColumn('uuid')
   @Field(() => ID)
   id: string;
 
-  @Column()
-  @Index({ unique: true })
-  @Field(() => String)
-  name: string;
+  //* TypodeProductos que de producto
+  @ManyToOne(() => Product, (product) => product.id, { lazy: true })
+  @Field(() => Product)
+  product: Product;
 
-  @Column({ type: 'boolean', default: true })
-  @Field(() => Boolean, { defaultValue: true })
-  isActive: boolean;
+  @ManyToOne(() => Product, (product) => product.id, { lazy: true })
+  @Field(() => Product)
+  contained: Product;
 
   @Column({ type: 'numeric' })
   @Field(() => Number)
@@ -26,11 +26,6 @@ export class ProductType {
   @Column({ type: 'numeric' })
   @Field(() => Number)
   updatedAt?: number;
-
-  //* Usuario que crea el registro
-  @OneToMany(() => Product, (product) => product.productTypeOne, { lazy: true })
-  @Field(() => [Product])
-  products: Product[];
 
   //* Usuario que crea el registro
   @ManyToOne(() => User, (user) => user.id, { nullable: true, lazy: true })

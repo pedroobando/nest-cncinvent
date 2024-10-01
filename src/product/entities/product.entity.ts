@@ -1,7 +1,8 @@
 import { ObjectType, Field, ID } from '@nestjs/graphql';
-import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from 'src/user/entities';
 import { ProductType } from 'src/product-type/entities';
+import { ProductContained } from 'src/product-contained/entities';
 
 @Entity({ name: 'products' })
 @ObjectType()
@@ -11,9 +12,9 @@ export class Product {
   id: string;
 
   //* TypodeProductos que de producto
-  @ManyToOne(() => ProductType, (pType) => pType.id, { nullable: true, lazy: true })
-  @Field(() => ProductType, { nullable: true })
-  productType?: ProductType;
+  @ManyToOne(() => ProductType, (pType) => pType.products, { lazy: true })
+  @Field(() => ProductType)
+  productTypeOne: ProductType;
 
   @Column()
   @Index({ unique: true })
@@ -41,10 +42,10 @@ export class Product {
   @Field(() => Boolean, { defaultValue: true })
   isActive: boolean;
 
-  @ManyToOne(() => Product, (product) => product.id, { nullable: true, lazy: true })
-  @JoinColumn({ name: 'containedIn' })
-  @Field(() => Product, { nullable: true })
-  containedIn?: Product;
+  // //* Usuario que crea el registro
+  // @OneToMany(() => ProductContained, (contained) => contained.product, { nullable: true, lazy: true })
+  // @Field(() => ProductContained, { nullable: true })
+  // contained: ProductContained;
 
   @Column({ type: 'numeric' })
   @Field(() => Number)

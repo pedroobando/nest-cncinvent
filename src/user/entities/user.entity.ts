@@ -1,12 +1,5 @@
 import { ObjectType, Field, Int, ID } from '@nestjs/graphql';
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 // import { Item } from 'src/items/entities';
 // import { List } from 'src/lists/entities';
@@ -48,10 +41,7 @@ export class User {
 
   //TODO: Relaciones
   //* lazy: carga las relaciones a solicitud
-  @ManyToOne(() => User, (user) => user.lastUpdateBy, {
-    nullable: true,
-    lazy: true,
-  })
+  @ManyToOne(() => User, (user) => user.lastUpdateBy, { nullable: true, lazy: true })
   @JoinColumn({ name: 'lastUpdateBy' })
   @Field(() => User, { nullable: true })
   lastUpdateBy?: User;

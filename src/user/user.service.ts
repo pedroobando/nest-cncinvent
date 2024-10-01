@@ -95,22 +95,16 @@ export class UserService {
     }
   }
 
-  async update(
-    updateUserInput: UpdateUserInput,
-    updatedBy: User,
-  ): Promise<User> {
+  async update(updateUserInput: UpdateUserInput, updatedBy: User): Promise<User> {
     try {
       let user = await this.userRepository.preload({ ...updateUserInput });
 
-      if (!user)
-        throw new NotFoundException(
-          `User with id: ${updateUserInput.id} not found`,
-        );
+      if (!user) throw new NotFoundException(`User with id: ${updateUserInput.id} not found`);
       user.email = user.email.toLowerCase().trim();
       user.fullName = user.fullName.trim();
       user.lastUpdateBy = updatedBy;
 
-      return this.userRepository.save(user);
+      return await this.userRepository.save(user);
     } catch (error) {
       this.handleDBExceptions(error);
     }
@@ -123,10 +117,7 @@ export class UserService {
     return this.userRepository.save(usertoBlock);
   }
 
-  async resetPassWord(
-    { id, password }: ResetPassInput,
-    user: User,
-  ): Promise<User> {
+  async resetPassWord({ id, password }: ResetPassInput, user: User): Promise<User> {
     const resetUser = await this.findOneById(id);
     resetUser.isActive = true;
     resetUser.password = this.bcryptPass(password);
@@ -140,9 +131,7 @@ export class UserService {
 
   private handleDBExceptions(error: any): never {
     if (error.code === '23505') {
-      throw new BadRequestException(
-        `Error ${error.detail.replace('Key ', '')}`,
-      );
+      throw new BadRequestException(`Error ${error.detail.replace('Key ', '')}`);
     }
     if (error.code === 'error-01') {
       throw new NotFoundException(`${error.detail}`);
